@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>测试</title>
+<script type="text/javascript" src="../static/common/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="../static/common/js/ajaxfileupload.js"></script>
+<script type="text/javascript">
+function uploadFile(){
+	//执行上传文件操作的函数
+    $.ajaxFileUpload({
+        //处理文件上传操作的服务器端地址(可以传参数,已亲测可用)
+        url:'../upload/uploadFile?uname=玄玉',
+        secureuri:false,                           //是否启用安全提交,默认为false 
+        fileElementId:['file'],               //文件选择框的id属性
+        dataType:'json',                           //服务器返回的格式,可以是json或xml等
+        success:function(data, status){   
+        	console.log(data);
+        	if(data.status=="OK"){
+        		alert(data.message);
+        		$("#image").attr("src",data.data);
+        	}else{
+        		alert(data.message);
+        	}
+        	
+        },
+        error:function(data, status, e){ //服务器响应失败时的处理函数
+            $('#result').html('图片上传失败，请重试！！');
+        }
+    });
+}
+</script>
+</head>
+<body>
+测试${message}
+<input type="file" name="file" id="file"/>
+<input type="file" name="file" id="file2"/>
+<input type="button" name="upload" id="upload" value="上传" onclick="uploadFile()"/>
+<img id="image" alt="" src="">
+</body>
+</html>

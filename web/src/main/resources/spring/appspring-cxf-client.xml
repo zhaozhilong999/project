@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:p="http://www.springframework.org/schema/p"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:jaxws="http://cxf.apache.org/jaxws"
+  xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    http://cxf.apache.org/jaxws  
+    http://cxf.apache.org/schemas/jaxws.xsd">
+    
+    <!-- 注：cxf配置文件必须和spring配置文件一起加(也就是在<context-param>里面加载),不能和springMVC的一起加载.
+   		 否则是访问不了接口的,启动时会报‘ No bean named 'cxf' is defined’错误 -->
+    
+    <!-- cxf3.0以后版本不导入下面两行配置也可以访问接口  --> 
+    <!-- <import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" /> -->
+    <!-- cxf客户端相注入spring实例，就可以在类中使用@Autowired和@Resource了 
+    	如果使用cxf工厂类创建实例，可以不用配置此功能。
+    -->
+    <jaxws:client id="userClient2" serviceClass="org.item.web.webclient.WebRequestService" address="http://localhost:8081/web/webservice/userService" />
+    
+</beans>

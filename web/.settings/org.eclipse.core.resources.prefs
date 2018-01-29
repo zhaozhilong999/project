@@ -1,0 +1,14 @@
+eclipse.preferences.version=1
+encoding//src/main/java=UTF-8
+encoding//src/main/resources=UTF-8
+encoding//src/main/resources/dev=UTF-8
+encoding//src/main/resources/dev/config.properties=UTF-8
+encoding//src/main/resources/dev/jdbc.properties=UTF-8
+encoding//src/main/resources/log4j.properties=UTF-8
+encoding//src/main/resources/pro/config.properties=UTF-8
+encoding//src/main/resources/pro/jdbc.properties=UTF-8
+encoding//src/main/resources/spring/applicationContext.xml=UTF-8
+encoding//src/main/resources/uat/config.properties=UTF-8
+encoding//src/main/resources/uat/jdbc.properties=UTF-8
+encoding//src/test/java=UTF-8
+encoding/<project>=UTF-8

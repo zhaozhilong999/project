@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.item.dao.WxUserMapper" >
+
+  <resultMap id="BaseResultMap" type="org.item.entity.WxUser" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="openId" property="openid" jdbcType="VARCHAR" />
+    <result column="nickName" property="nickname" jdbcType="VARCHAR" />
+    <result column="headImgUrl" property="headimgurl" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="country" property="country" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="subscribe_time" property="subscribeTime" jdbcType="VARCHAR" />
+    <result column="subscribe" property="subscribe" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, openId, nickName, headImgUrl, sex, city, country, province, createTime, updateTime, 
+    subscribe_time, subscribe
+  </sql>
+
+  <sql id="Base_Insert_ValueList" >
+    #{id,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
+      #{headimgurl,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{country,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{updatetime,jdbcType=TIMESTAMP}, #{subscribeTime,jdbcType=VARCHAR}, #{subscribe,jdbcType=VARCHAR}
+      
+  </sql>
+
+  <sql id="Base_Update_ValueList" >
+    id = #{id,jdbcType=VARCHAR},
+      openId = #{openid,jdbcType=VARCHAR},
+      nickName = #{nickname,jdbcType=VARCHAR},
+      headImgUrl = #{headimgurl,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      country = #{country,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      subscribe_time = #{subscribeTime,jdbcType=VARCHAR},
+      subscribe = #{subscribe,jdbcType=VARCHAR}
+  </sql>
+
+  <sql id="Base_Table_Name" >
+    wx_user
+  </sql>
+
+  <sql id="Base_Primary_Key_Value" >
+    id = #{id,jdbcType=VARCHAR}
+  </sql>
+
+  <sql id="Base_Select_Where" >
+    <where >
+      <trim prefix="(" suffix=")" suffixOverrides="and|or" >
+        <if test="id != null" >
+          <![CDATA[ id = #{id,jdbcType=VARCHAR} and  ]]>
+        </if>
+        <if test="openid != null" >
+          <![CDATA[ openId = #{openid,jdbcType=VARCHAR} and  ]]>
+        </if>
+        <if test="nickname != null" >
+          <![CDATA[ nickName = #{nickname,jdbcType=VARCHAR} and  ]]>
+        </if>
+        <if test="headimgurl != null" >
+          <![CDATA[ headImgUrl = #{headimgurl,jdbcType=VARCHAR} and  ]]>
+        </if>
+        <if test="sex != null" >
+          <![CDATA[ sex = #{sex,jdbcType=VARCHAR} and  ]]>
+        </if>
+        <if test="city != null" >
+          <![CDATA[ city = #{city,jdbcType=VARCHAR} and  ]]>
+        </if>
+        <if test="country != null" >
+          <![CDATA[ country = #{country,jdbcType=VARCHAR} and  ]]>
+        </if>
+        <if test="province != null" >
+          <![CDATA[ province = #{province,jdbcType=VARCHAR} and  ]]>
+        </if>
+        <if test="createtime != null" >
+          <![CDATA[ createTime = #{createtime,jdbcType=TIMESTAMP} and  ]]>
+        </if>
+        <if test="updatetime != null" >
+          <![CDATA[ updateTime = #{updatetime,jdbcType=TIMESTAMP} and  ]]>
+        </if>
+        <if test="subscribeTime != null" >
+          <![CDATA[ subscribe_time = #{subscribeTime,jdbcType=VARCHAR} and  ]]>
+        </if>
+        <if test="subscribe != null" >
+          <![CDATA[ subscribe = #{subscribe,jdbcType=VARCHAR} and  ]]>
+        </if>
+      </trim>
+    </where>
+  </sql>
+
+  <sql id="Base_Get_Object" >
+    select 
+    <include refid="Base_Column_List" />
+     from 
+    <include refid="Base_Table_Name" />
+     where 
+    <include refid="Base_Primary_Key_Value" />
+  </sql>
+
+  <sql id="Base_Get_List" >
+    select 
+    <include refid="Base_Column_List" />
+     from 
+    <include refid="Base_Table_Name" />
+    <include refid="Base_Select_Where" />
+  </sql>
+
+  <select id="selectById" parameterType="org.item.entity.WxUser" resultMap="BaseResultMap" >
+    <include refid="Base_Get_Object" />
+  </select>
+
+  <select id="selectByEntity" parameterType="org.item.entity.WxUser" resultMap="BaseResultMap" >
+    <include refid="Base_Get_List" />
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap" >
+    <include refid="Base_Get_List" />
+  </select>
+
+  <select id="selectCount" parameterType="map" resultType="int" >
+    select count(*) from (<include refid="Base_Get_List" />) r 
+  </select>
+
+  <insert id="insert" parameterType="org.item.entity.WxUser" >
+    insert into 
+    <include refid="Base_Table_Name" />
+    (
+    <include refid="Base_Column_List" />
+    ) values (
+    <include refid="Base_Insert_ValueList" />
+    )
+  </insert>
+
+  <update id="updateById" parameterType="org.item.entity.WxUser" >
+    update 
+    <include refid="Base_Table_Name" />
+     set 
+    <include refid="Base_Update_ValueList" />
+     where 
+    <include refid="Base_Primary_Key_Value" />
+  </update>
+
+  <delete id="delete" parameterType="org.item.entity.WxUser" >
+    delete from 
+    <include refid="Base_Table_Name" />
+    <include refid="Base_Select_Where" />
+  </delete>
+
+  <delete id="deleteById" parameterType="org.item.entity.WxUser" >
+    delete from 
+    <include refid="Base_Table_Name" />
+     where 
+    <include refid="Base_Primary_Key_Value" />
+  </delete>
+</mapper>

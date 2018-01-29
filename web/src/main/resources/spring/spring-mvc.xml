@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:p="http://www.springframework.org/schema/p"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:mvc="http://www.springframework.org/schema/mvc"
+  xmlns:aop="http://www.springframework.org/schema/aop"
+  xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.2.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+    
+    
+    
+     <!--避免IE执行AJAX时，返回JSON出现下载文件  @ResponseBody返回String类型是有中文会乱码(可以用
+     org.springframework.http.converter.StringHttpMessageConverter不乱码)，
+     com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter是专门把对象转换json的，也就是return 是一个对象，不是String字符串 -->    
+    <bean id="fastJsonHttpMessageConverter"    
+        class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">    
+        <property name="supportedMediaTypes">    
+            <list>    
+                <value>application/json;charset=UTF-8</value>   
+                <value>application/x-www-form-urlencoded; charset=UTF-8</value> 
+            </list>    
+        </property>    
+    </bean> 
+    <!-- 完成请求和注解POJO的映射 -->    
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">    
+        <property name="messageConverters">    
+            <list>    
+                <ref bean="fastJsonHttpMessageConverter" /> <!-- JSON转换器 -->    
+            </list>    
+        </property>    
+    </bean>   
+      <!-- 扫描时只扫描@Controller -->
+	<context:component-scan base-package="org.item.web" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+	</context:component-scan>
+     <!-- 添加注解驱动 -->      
+    <mvc:annotation-driven /> 
+    <!-- 访问静态资源 -->   
+    <mvc:default-servlet-handler/>    
+        
+    <!-- 设置使用注解的类所在包 -->    
+    <context:component-scan base-package="org.item.web" />    
+        
+     <!-- 拦截器配置 -->
+     <mvc:interceptors>  
+        <mvc:interceptor>  
+            <mvc:mapping path="/**/*.do" />  
+            <!-- 定义在mvc:interceptor下面的表示是对特定的请求才进行拦截的 -->  
+            <bean class="org.item.filter.LoginIntercept" />  
+        </mvc:interceptor>  
+    </mvc:interceptors>  
+    <!--  定义跳转的文件的前后缀 ，视图模式配置  
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">    
+        这里的配置我的理解是自动给后面action的方法return的字符串加上前缀和后缀，变成一个 可用的url地址    
+        <property name="prefix" value="/" />    
+        <property name="suffix" value=".jsp" />    
+    </bean>  -->   
+     <!-- freemarker的配置 -->
+    <bean id="freemarkerConfig"
+        class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/" />
+        <property name="defaultEncoding" value="utf-8" />
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="template_update_delay">10</prop>
+                <prop key="locale">zh_CN</prop>
+                <prop key="datetime_format">yyyy-MM-dd</prop><!-- 时间格式化 -->
+                <prop key="date_format">yyyy-MM-dd</prop>
+                <prop key="number_format">#.##</prop>
+            </props>
+        </property>
+    </bean>
+    <bean
+        class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="ignoreAcceptHeader" value="true" />
+        <property name="defaultContentType" value="text/html" />
+        <property name="mediaTypes">
+            <map>
+                <entry key="json" value="application/json" />
+                <entry key="xls" value="application/vnd.ms-excel" />
+                <entry key="xlsx"
+                    value="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                <entry key="pdf" value="application/pdf" />
+            </map>
+        </property>
+        <property name="favorParameter" value="false" />
+        <property name="viewResolvers">
+            <list>
+                <!-- 配置freeMarker视图解析器 -->
+                <bean
+                    class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+                    <property name="cache" value="true" />
+                    <property name="prefix" value="" /><!-- 上面已经配置了，这里就不用配置了 -->
+                    <property name="suffix" value=".html" />
+                    <property name="contentType" value="text/html;charset=UTF-8" />
+                    <property name="viewClass"
+                        value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
+                    <property name="allowSessionOverride" value="true" />
+                    <property name="allowRequestOverride" value="true" />
+                    <property name="exposeSpringMacroHelpers" value="false" />
+                    <property name="exposeRequestAttributes" value="true" />
+                    <property name="exposeSessionAttributes" value="true" />
+                    <property name="requestContextAttribute" value="request" />
+                </bean>
+                <bean
+                    class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                    <property name="viewClass"
+                        value="org.springframework.web.servlet.view.JstlView" />
+                    <property name="prefix" value="/" />
+                    <property name="suffix" value=".jsp" />
+                </bean>
+            </list>
+        </property>
+    </bean>
+    <!-- SpringMVC上传文件时，需要配置MultipartResolver处理器-->    
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">      
+        <!-- 默认编码 -->    
+        <property name="defaultEncoding" value="utf-8" />      
+        <!-- 文件大小最大值 -->    
+        <property name="maxUploadSize" value="10485760000" />      
+        <!-- 内存中的最大值 -->    
+        <property name="maxInMemorySize" value="40960" />      
+    </bean>     
+    
+</beans>
